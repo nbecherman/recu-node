@@ -33,9 +33,9 @@ export default class respuestaService {
                 throw error;
             }
         }
- async getPreguntas(filters) {
+ async getPreguntas(palabraClave, ordenarPorFecha) {
     try {
-        return await PreguntasRepo.getPreguntas(filters);
+        return await PreguntasRepo.getPreguntas(palabraClave, ordenarPorFecha);
     } catch (error) {
         console.error("Error en getPreguntas:", error.message);
         throw error;

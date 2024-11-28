@@ -7,13 +7,14 @@ const PreguntaService = new preguntaService();
 
 const router = express.Router();
 
+//funciona
 router.get('/', async (request, response) => {
     const { palabraClave, ordenarPorFecha } = request.query;
     console.log(palabraClave, ordenarPorFecha);
     
 
     try {
-        const preguntas = await PreguntaService.getPreguntas({ palabraClave, ordenarPorFecha });
+        const preguntas = await PreguntaService.getPreguntas( palabraClave, ordenarPorFecha );
         return response.status(200).json(preguntas);
     } catch (error) {
         console.error(error);
@@ -21,6 +22,7 @@ router.get('/', async (request, response) => {
     }
 });
 
+//funciona
 router.get('/azar', async (request, response) => {
     try {
         const pregunta = await PreguntaService.getPreguntaAlAzar();
@@ -34,9 +36,10 @@ router.get('/azar', async (request, response) => {
     }
 });
 
+//funciona
 router.delete('/:id', async (request, response) => {
     const { id } = request.params;
-console.log(id + "holi");
+console.log(id + " hola");
     try {
         const pregunta = await PreguntaService.getPreguntaById(id);
         if (!pregunta) {
@@ -51,6 +54,7 @@ console.log(id + "holi");
     }
 });
 
+//funca
 router.post("/", async (request, response) => {
     const { pregunta, opcion1, opcion2, opcion3, opcion4, respuestaCorrecta } = request.body;
 
@@ -84,65 +88,63 @@ router.put("/:id", async (request, response) => {
     const { id } = request.params;
     const { pregunta, opcion1, opcion2, opcion3, opcion4, respuestaCorrecta } = request.body;
 
-
-    if (pregunta && typeof pregunta !== 'string') {
-        return response.status(400).json({ error: "El campo 'pregunta' debe ser una cadena de texto." });
+    if (pregunta && typeof pregunta !== "string") {
+        return response.status(400).json({ error: "preg tiene que ser texto" });
     }
-    if (opcion1 && typeof opcion1 !== 'string') {
-        return response.status(400).json({ error: "El campo 'opcion1' debe ser una cadena de texto." });
+    if (opcion1 && typeof opcion1 !== "string") {
+        return response.status(400).json({ error: "op1 tiene que ser textp" });
     }
-    if (opcion2 && typeof opcion2 !== 'string') {
-        return response.status(400).json({ error: "El campo 'opcion2' debe ser una cadena de texto." });
+    if (opcion2 && typeof opcion2 !== "string") {
+        return response.status(400).json({ error: "op2 tiene que ser texto" });
     }
-    if (opcion3 && typeof opcion3 !== 'string') {
-        return response.status(400).json({ error: "El campo 'opcion3' debe ser una cadena de texto." });
+    if (opcion3 && typeof opcion3 !== "string") {
+        return response.status(400).json({ error: "op3 tiene que ser textp" });
     }
-    if (opcion4 && typeof opcion4 !== 'string') {
-        return response.status(400).json({ error: "El campo 'opcion4' debe ser una cadena de texto." });
+    if (opcion4 && typeof opcion4 !== "string") {
+        return response.status(400).json({ error: "op4 tiene que ser texto" });
     }
-    if (respuestaCorrecta && typeof respuestaCorrecta !== 'string') {
-        return response.status(400).json({ error: "El campo 'respuestaCorrecta' debe ser una cadena de texto." });
+    if (respuestaCorrecta && typeof respuestaCorrecta !== "string") {
+        return response.status(400).json({ error: "resp correcta tiene que ser texto" });
     }
-
-
-    const Pregunta = {};
-    if (pregunta) Pregunta.pregunta = pregunta;
-    if (opcion1) Pregunta.opcion1 = opcion1;
-    if (opcion2) Pregunta.opcion2 = opcion2;
-    if (opcion3) Pregunta.opcion3 = opcion3;
-    if (opcion4) Pregunta.opcion4 = opcion4;
-    if (respuestaCorrecta) Pregunta.respuestaCorrecta = respuestaCorrecta;
-
 
     try {
-        const ExistePregunta = await PreguntaService.getPreguntaById(id);
-   
-        if (ExistePregunta) {
-            const opcionesExistentes = [ExistePregunta.opcion1, ExistePregunta.opcion2, ExistePregunta.opcion3, ExistePregunta.opcion4];
-            if (respuestaCorrecta) {
-                if (!opcionesExistentes.includes(respuestaCorrecta)) {
-                    return response.status(400).json({ error: "La respuesta correcta debe ser una de las opciones." });
-                }
-            }
-        } else {
-            return response.status(404).json({ error: 'Pregunta no encontrada.' });
+        const existePregunta = await PreguntaService.getPreguntaById(id);
+        if (!existePregunta) {
+            return response.status(404).json({ error: "Pregunta no encontrada" });
         }
 
+        if (respuestaCorrecta) {
+            const opcionesActuales = [
+                opcion1 || existePregunta.opcion1,
+                opcion2 || existePregunta.opcion2,
+                opcion3 || existePregunta.opcion3,
+                opcion4 || existePregunta.opcion4,
+            ];
 
-        const result = await PreguntaService.updatePregunta(id, Pregunta);
-        if (result) {
-            return response.status(200).json({ message: 'Pregunta actualizada correctamente.', result });
+            if (!opcionesActuales.includes(respuestaCorrecta)) {
+                return response.status(400).json({
+                    error: "la resp correcta tiene que ya existir en las opciones",
+                });
+            }
+        }
+
+        const camposActualizados = { pregunta,opcion1, opcion2,opcion3,opcion4,respuestaCorrecta,
+        };
+
+        const preguntaActualizada = await PreguntaService.updatePregunta(id, camposActualizados);
+
+        if (preguntaActualizada) {
+            return response.status(200).json({
+                message: "Pregunta actualizada correctamente.",
+                result: preguntaActualizada,
+            });
         } else {
-            return response.status(404).json({ error: 'Pregunta no encontrada.' });
+            return response.status(404).json({ error: "No se pudo actualizar la pregunta porque no fue encontrada." });
         }
     } catch (error) {
-        console.error(error);
-        return response.status(500).json({ error: 'Ocurrió un error en el servidor.' });
-    } 
-
-    
-    
-    
+        console.error("Error al actualizar la pregunta:", error);
+        return response.status(500).json({ error: "Ocurrió un error en el servidor al intentar actualizar la pregunta." });
+    }
 });
 
 export default router;

@@ -88,7 +88,7 @@ export default class preguntasRepo
             }
         }
     
-    async getPreguntas({ palabraClave, ordenarPorFecha }) {
+    async getPreguntas(palabraClave, ordenarPorFecha ) {
         try {
             let sql = `SELECT * FROM preguntas`;
             const values = [];
