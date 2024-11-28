@@ -79,14 +79,14 @@ export default class preguntasRepo
     //continuar
     async getPreguntaAlAzar() {
         try {
-            const sql = `SELECT * FROM preguntas ORDER BY RANDOM() LIMIT 1`;
-            const result = await this.DBClient.query(sql);
-            return result.rows[0] || null;
-        } catch (error) {
-            console.error("Error al obtener una pregunta al azar:", error);
-            throw new Error("Error al obtener una pregunta al azar.");
+                const sql = "SELECT * FROM preguntas ORDER BY RANDOM() LIMIT 1";
+                const result = await this.DBClient.query(sql);
+                return result.rows[0] || null;
+            } catch (error) {
+                console.error("Error al obtener una pregunta al azar:", error);
+                throw new Error("Error al obtener una pregunta al azar.");
+            }
         }
-    }
     
     async getPreguntas({ palabraClave, ordenarPorFecha }) {
         try {

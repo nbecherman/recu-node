@@ -124,17 +124,7 @@ router.put("/:id", async (request, response) => {
     } catch (error) {
         console.error(error);
         return response.status(500).json({ error: 'Ocurrió un error en el servidor.' });
-    }
-
-
-
-
-    //continuar
-
-
-    
-    //falta probarlo
-    
+    } 
 
     router.get('/', async (request, response) => {
         const { palabraClave, ordenarPorFecha } = request.query;
@@ -151,12 +141,34 @@ router.put("/:id", async (request, response) => {
     
 });
 
-
-
-
-
-
-
-
-
 export default router;
+
+
+/*
+
+GET http://localhost:3100/preguntas/azar
+DELETE http://localhost:3100/preguntas/6
+POST http://localhost:3100/preguntas
+{
+    "pregunta": "¿Cuál es el idioma más hablado en el mundo?",
+    "opcion1": "Español",
+    "opcion2": "Inglés",
+    "opcion3": "Mandarín",
+    "opcion4": "Hindi",
+    "respuestaCorrecta": "Mandarín"
+}
+
+PUT http://localhost:3100/preguntas/6
+para actualizar todos los campos:
+{ 
+    "pregunta": "¿Cuál es la capital de Argentina?",
+    "opcion1": "Buenos Aires",
+    "opcion2": "Córdoba",
+    "opcion3": "Rosario",
+    "opcion4": "Mendoza",
+    "respuestaCorrecta": "Buenos Aires"
+}
+
+GET http://localhost:3100/preguntas
+GET http://localhost:3100/preguntas?ordenarPorFecha=desc
+*/

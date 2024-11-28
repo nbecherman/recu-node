@@ -25,14 +25,14 @@ export default class respuestaService {
     }
 
 
-   async getPreguntaAlAzar() {
-    try {
-        return await PreguntasRepo.getPreguntaAlAzar();
-    } catch (error) {
-        console.error("Error en getPreguntaAlAzar:", error.message);
-        throw error;
-    }
-}
+    async getPreguntaAlAzar() {
+        try {
+            return await PreguntasRepo.getPreguntaAlAzar();
+            } catch (error) {
+                console.error("Error en getPreguntaAlAzar:", error.message);
+                throw error;
+            }
+        }
  async getPreguntas(filters) {
     try {
         return await PreguntasRepo.getPreguntas(filters);
