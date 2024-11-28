@@ -7,6 +7,20 @@ const PreguntaService = new preguntaService();
 
 const router = express.Router();
 
+router.get('/', async (request, response) => {
+    const { palabraClave, ordenarPorFecha } = request.query;
+    console.log(palabraClave, ordenarPorFecha);
+    
+
+    try {
+        const preguntas = await PreguntaService.getPreguntas({ palabraClave, ordenarPorFecha });
+        return response.status(200).json(preguntas);
+    } catch (error) {
+        console.error(error);
+        return response.status(500).json({ error: 'Ocurrió un error en el servidor.' });
+    }
+});
+
 router.get('/azar', async (request, response) => {
     try {
         const pregunta = await PreguntaService.getPreguntaAlAzar();
@@ -101,10 +115,10 @@ router.put("/:id", async (request, response) => {
 
 
     try {
-        const existingPregunta = await PreguntaService.getPreguntaById(id);
+        const ExistePregunta = await PreguntaService.getPreguntaById(id);
    
-        if (existingPregunta) {
-            const opcionesExistentes = [existingPregunta.opcion1, existingPregunta.opcion2, existingPregunta.opcion3, existingPregunta.opcion4];
+        if (ExistePregunta) {
+            const opcionesExistentes = [ExistePregunta.opcion1, ExistePregunta.opcion2, ExistePregunta.opcion3, ExistePregunta.opcion4];
             if (respuestaCorrecta) {
                 if (!opcionesExistentes.includes(respuestaCorrecta)) {
                     return response.status(400).json({ error: "La respuesta correcta debe ser una de las opciones." });
@@ -126,17 +140,7 @@ router.put("/:id", async (request, response) => {
         return response.status(500).json({ error: 'Ocurrió un error en el servidor.' });
     } 
 
-    router.get('/', async (request, response) => {
-        const { palabraClave, ordenarPorFecha } = request.query;
     
-        try {
-            const preguntas = await PreguntaService.getPreguntas({ palabraClave, ordenarPorFecha });
-            return response.status(200).json(preguntas);
-        } catch (error) {
-            console.error(error);
-            return response.status(500).json({ error: 'Ocurrió un error en el servidor.' });
-        }
-    });
     
     
 });
